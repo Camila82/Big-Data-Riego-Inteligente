@@ -1,0 +1,802 @@
+{
+  "periodo": {
+    "inicio": "2025-01-01 00:00:00",
+    "fin": "2025-04-10 10:39:00",
+    "dias": 99.44
+  },
+  "balance_etl": {
+    "extraidos": 1003400,
+    "rechazados": 1200,
+    "rechazos_por_motivo": {
+      "Sensor_Fuera_Rango_Critico": 600,
+      "Fecha_Invalida": 300,
+      "Sin_Dispositivo_O_Nulos": 300
+    },
+    "duplicados": 1000,
+    "cargados": 1001200
+  },
+  "cuarentena_motivos": {
+    "Sensor_Fuera_Rango_Critico": 600,
+    "Fecha_Invalida": 300,
+    "Sin_Dispositivo_O_Nulos": 300
+  },
+  "kpi": {
+    "lecturas_validas": 1001200,
+    "dispositivos_activos": 7,
+    "humedad_suelo_prom": 71.76,
+    "pct_tiempo_bomba": 0.451,
+    "pct_falla_sensor": 1.67,
+    "pct_sin_wifi": 1.83,
+    "eventos_riego": 992,
+    "litros_total": 9967.9,
+    "litros_dia": 100.2,
+    "duracion_media_s": 244.4,
+    "alertas_logicas": 1
+  },
+  "u1_suelo": {
+    "n": 1001200,
+    "media": 70.57,
+    "mediana": 70.44,
+    "de": 13.45,
+    "p25": 65.0,
+    "p75": 76.49,
+    "n_cero": 16873,
+    "pct_cero": 1.69,
+    "n_cero_con_falla": 16706,
+    "media_sin_falla": 71.76,
+    "mediana_sin_falla": 70.63,
+    "de_sin_falla": 9.9,
+    "n_clamp_100": 152
+  },
+  "u2_temp": {
+    "media": 13.83,
+    "mediana": 13.82,
+    "de": 5.58,
+    "min": -1.8,
+    "max": 30.48,
+    "pct_le5": 4.38,
+    "n_le5": 43891,
+    "pct_bajo0": 0.112,
+    "n_bajo0": 1120,
+    "max_campo": 25.09,
+    "max_invernadero": 30.48
+  },
+  "u3_riego": {
+    "motivos": {
+      "HUM_OBJETIVO": 944,
+      "TIEMPO_MAX": 36,
+      "FALLA_SENSOR": 12
+    },
+    "motivos_pct": {
+      "HUM_OBJETIVO": 95.16,
+      "TIEMPO_MAX": 3.63,
+      "FALLA_SENSOR": 1.21
+    },
+    "dur_media": 244.4,
+    "dur_mediana": 249.0,
+    "dur_de": 37.6,
+    "litros_media": 10.05
+  },
+  "b1_falla_disp": [
+    {
+      "id_dispositivo": "ESP32_Esperanza_03",
+      "n": 143041,
+      "fallas": 1322,
+      "pct": 0.92
+    },
+    {
+      "id_dispositivo": "ESP32_Mirador_04",
+      "n": 143039,
+      "fallas": 1058,
+      "pct": 0.74
+    },
+    {
+      "id_dispositivo": "ESP32_Progreso_01",
+      "n": 143029,
+      "fallas": 1304,
+      "pct": 0.91
+    },
+    {
+      "id_dispositivo": "ESP32_SanJose_02",
+      "n": 143015,
+      "fallas": 1008,
+      "pct": 0.7
+    },
+    {
+      "id_dispositivo": "ESP32_StBarbara_07",
+      "n": 143020,
+      "fallas": 1116,
+      "pct": 0.78
+    },
+    {
+      "id_dispositivo": "ESP32_VillaLuz_05",
+      "n": 143020,
+      "fallas": 9672,
+      "pct": 6.76
+    },
+    {
+      "id_dispositivo": "ESP32_Virginia_06",
+      "n": 143036,
+      "fallas": 1228,
+      "pct": 0.86
+    }
+  ],
+  "b1_resumen": {
+    "villaluz_pct": 6.76,
+    "otros_pct": 0.82,
+    "villaluz_fallas": 9672,
+    "total_fallas": 16708
+  },
+  "b1_villaluz_mes": [
+    {
+      "mes": "Ene",
+      "n": 44584,
+      "pct": 3.03
+    },
+    {
+      "mes": "Feb",
+      "n": 40264,
+      "pct": 6.37
+    },
+    {
+      "mes": "Mar",
+      "n": 44588,
+      "pct": 9.29
+    },
+    {
+      "mes": "Abr (1–10)",
+      "n": 13584,
+      "pct": 11.87
+    }
+  ],
+  "b1_otros_mes": [
+    {
+      "mes": "Ene",
+      "pct": 0.78
+    },
+    {
+      "mes": "Feb",
+      "pct": 0.88
+    },
+    {
+      "mes": "Mar",
+      "pct": 0.81
+    },
+    {
+      "mes": "Abr (1–10)",
+      "pct": 0.82
+    }
+  ],
+  "b4_wifi_disp": [
+    {
+      "id_dispositivo": "ESP32_Esperanza_03",
+      "n": 143041,
+      "sin_wifi": 426,
+      "pct": 0.3
+    },
+    {
+      "id_dispositivo": "ESP32_Mirador_04",
+      "n": 143039,
+      "sin_wifi": 203,
+      "pct": 0.14
+    },
+    {
+      "id_dispositivo": "ESP32_Progreso_01",
+      "n": 143029,
+      "sin_wifi": 367,
+      "pct": 0.26
+    },
+    {
+      "id_dispositivo": "ESP32_SanJose_02",
+      "n": 143015,
+      "sin_wifi": 495,
+      "pct": 0.35
+    },
+    {
+      "id_dispositivo": "ESP32_StBarbara_07",
+      "n": 143020,
+      "sin_wifi": 234,
+      "pct": 0.16
+    },
+    {
+      "id_dispositivo": "ESP32_VillaLuz_05",
+      "n": 143020,
+      "sin_wifi": 357,
+      "pct": 0.25
+    },
+    {
+      "id_dispositivo": "ESP32_Virginia_06",
+      "n": 143036,
+      "sin_wifi": 16246,
+      "pct": 11.36
+    }
+  ],
+  "b4_resumen": {
+    "virginia_pct": 11.36,
+    "otros_pct": 0.24,
+    "pend_max_virginia": 179,
+    "duplicados_total": 1000,
+    "duplicados_virginia": 700
+  },
+  "b2_litros_mes": [
+    {
+      "mes": "Ene",
+      "campo": 16.02,
+      "invernadero": 19.14
+    },
+    {
+      "mes": "Feb",
+      "campo": 15.51,
+      "invernadero": 19.77
+    },
+    {
+      "mes": "Mar",
+      "campo": 10.1,
+      "invernadero": 19.53
+    },
+    {
+      "mes": "Abr (1–10)",
+      "campo": 10.23,
+      "invernadero": 18.27
+    }
+  ],
+  "b2_temporada": {
+    "Lluviosa (mar–abr)": {
+      "Campo abierto": 10.13,
+      "Invernadero": 19.23
+    },
+    "Seca (ene–feb)": {
+      "Campo abierto": 15.78,
+      "Invernadero": 19.44
+    }
+  },
+  "b2_eventos_mes": {
+    "Ene": {
+      "Campo abierto": 284,
+      "Invernadero": 65
+    },
+    "Feb": {
+      "Campo abierto": 252,
+      "Invernadero": 62
+    },
+    "Mar": {
+      "Campo abierto": 185,
+      "Invernadero": 69
+    },
+    "Abr (1–10)": {
+      "Campo abierto": 55,
+      "Invernadero": 20
+    }
+  },
+  "b3_suelo": [
+    {
+      "tipo_suelo": "Orgánico",
+      "id_dispositivo": "ESP32_Mirador_04",
+      "cultivo": "Tomate Chonto",
+      "es_invernadero": true,
+      "eventos": 216,
+      "litros": 1924.89,
+      "eventos_dia": 2.17,
+      "litros_dia": 19.36
+    },
+    {
+      "tipo_suelo": "Arenoso",
+      "id_dispositivo": "ESP32_Esperanza_03",
+      "cultivo": "Maíz Forrajero",
+      "es_invernadero": false,
+      "eventos": 165,
+      "litros": 1696.49,
+      "eventos_dia": 1.66,
+      "litros_dia": 17.06
+    },
+    {
+      "tipo_suelo": "Franco-Limoso",
+      "id_dispositivo": "ESP32_VillaLuz_05",
+      "cultivo": "Hortalizas Varias",
+      "es_invernadero": false,
+      "eventos": 160,
+      "litros": 1615.25,
+      "eventos_dia": 1.61,
+      "litros_dia": 16.24
+    },
+    {
+      "tipo_suelo": "Franco",
+      "id_dispositivo": "ESP32_SanJose_02",
+      "cultivo": "Papa Criolla",
+      "es_invernadero": false,
+      "eventos": 141,
+      "litros": 1369.76,
+      "eventos_dia": 1.42,
+      "litros_dia": 13.77
+    },
+    {
+      "tipo_suelo": "Franco-Arcilloso",
+      "id_dispositivo": "ESP32_Progreso_01",
+      "cultivo": "Papa Pastusa",
+      "es_invernadero": false,
+      "eventos": 111,
+      "litros": 1133.68,
+      "eventos_dia": 1.12,
+      "litros_dia": 11.4
+    },
+    {
+      "tipo_suelo": "Franco",
+      "id_dispositivo": "ESP32_Virginia_06",
+      "cultivo": "Papa Sabanera",
+      "es_invernadero": false,
+      "eventos": 107,
+      "litros": 1229.42,
+      "eventos_dia": 1.08,
+      "litros_dia": 12.36
+    },
+    {
+      "tipo_suelo": "Arcilloso",
+      "id_dispositivo": "ESP32_StBarbara_07",
+      "cultivo": "Fríjol Cargamanto",
+      "es_invernadero": false,
+      "eventos": 92,
+      "litros": 998.44,
+      "eventos_dia": 0.93,
+      "litros_dia": 10.04
+    }
+  ],
+  "m1": [
+    {
+      "cultivo": "Fríjol Cargamanto",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Madrugada",
+      "litros_est": 20.520000000000003,
+      "litros_dia": 0.51
+    },
+    {
+      "cultivo": "Fríjol Cargamanto",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Mañana",
+      "litros_est": 87.0,
+      "litros_dia": 2.15
+    },
+    {
+      "cultivo": "Fríjol Cargamanto",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Tarde",
+      "litros_est": 144.2,
+      "litros_dia": 3.57
+    },
+    {
+      "cultivo": "Fríjol Cargamanto",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Noche",
+      "litros_est": 10.48,
+      "litros_dia": 0.26
+    },
+    {
+      "cultivo": "Fríjol Cargamanto",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Madrugada",
+      "litros_est": 56.16,
+      "litros_dia": 0.95
+    },
+    {
+      "cultivo": "Fríjol Cargamanto",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Mañana",
+      "litros_est": 249.44,
+      "litros_dia": 4.23
+    },
+    {
+      "cultivo": "Fríjol Cargamanto",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Tarde",
+      "litros_est": 365.2,
+      "litros_dia": 6.19
+    },
+    {
+      "cultivo": "Fríjol Cargamanto",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Noche",
+      "litros_est": 65.44,
+      "litros_dia": 1.11
+    },
+    {
+      "cultivo": "Hortalizas Varias",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Madrugada",
+      "litros_est": 46.21,
+      "litros_dia": 1.14
+    },
+    {
+      "cultivo": "Hortalizas Varias",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Mañana",
+      "litros_est": 201.42000000000002,
+      "litros_dia": 4.98
+    },
+    {
+      "cultivo": "Hortalizas Varias",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Tarde",
+      "litros_est": 187.28,
+      "litros_dia": 4.63
+    },
+    {
+      "cultivo": "Hortalizas Varias",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Noche",
+      "litros_est": 74.21000000000001,
+      "litros_dia": 1.83
+    },
+    {
+      "cultivo": "Hortalizas Varias",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Madrugada",
+      "litros_est": 29.7,
+      "litros_dia": 0.5
+    },
+    {
+      "cultivo": "Hortalizas Varias",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Mañana",
+      "litros_est": 370.79,
+      "litros_dia": 6.28
+    },
+    {
+      "cultivo": "Hortalizas Varias",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Tarde",
+      "litros_est": 548.75,
+      "litros_dia": 9.3
+    },
+    {
+      "cultivo": "Hortalizas Varias",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Noche",
+      "litros_est": 156.89000000000001,
+      "litros_dia": 2.66
+    },
+    {
+      "cultivo": "Maíz Forrajero",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Madrugada",
+      "litros_est": 60.67,
+      "litros_dia": 1.5
+    },
+    {
+      "cultivo": "Maíz Forrajero",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Mañana",
+      "litros_est": 195.02,
+      "litros_dia": 4.82
+    },
+    {
+      "cultivo": "Maíz Forrajero",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Tarde",
+      "litros_est": 302.3,
+      "litros_dia": 7.47
+    },
+    {
+      "cultivo": "Maíz Forrajero",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Noche",
+      "litros_est": 8.77,
+      "litros_dia": 0.22
+    },
+    {
+      "cultivo": "Maíz Forrajero",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Madrugada",
+      "litros_est": 60.94,
+      "litros_dia": 1.03
+    },
+    {
+      "cultivo": "Maíz Forrajero",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Mañana",
+      "litros_est": 401.79,
+      "litros_dia": 6.81
+    },
+    {
+      "cultivo": "Maíz Forrajero",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Tarde",
+      "litros_est": 555.1,
+      "litros_dia": 9.41
+    },
+    {
+      "cultivo": "Maíz Forrajero",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Noche",
+      "litros_est": 111.89999999999999,
+      "litros_dia": 1.9
+    },
+    {
+      "cultivo": "Papa Criolla",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Madrugada",
+      "litros_est": 17.48,
+      "litros_dia": 0.43
+    },
+    {
+      "cultivo": "Papa Criolla",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Mañana",
+      "litros_est": 161.56,
+      "litros_dia": 3.99
+    },
+    {
+      "cultivo": "Papa Criolla",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Tarde",
+      "litros_est": 209.44,
+      "litros_dia": 5.18
+    },
+    {
+      "cultivo": "Papa Criolla",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Noche",
+      "litros_est": 43.84,
+      "litros_dia": 1.08
+    },
+    {
+      "cultivo": "Papa Criolla",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Madrugada",
+      "litros_est": 44.84,
+      "litros_dia": 0.76
+    },
+    {
+      "cultivo": "Papa Criolla",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Mañana",
+      "litros_est": 295.44,
+      "litros_dia": 5.01
+    },
+    {
+      "cultivo": "Papa Criolla",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Tarde",
+      "litros_est": 475.08000000000004,
+      "litros_dia": 8.05
+    },
+    {
+      "cultivo": "Papa Criolla",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Noche",
+      "litros_est": 122.08,
+      "litros_dia": 2.07
+    },
+    {
+      "cultivo": "Papa Pastusa",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Madrugada",
+      "litros_est": 22.0,
+      "litros_dia": 0.54
+    },
+    {
+      "cultivo": "Papa Pastusa",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Mañana",
+      "litros_est": 133.96,
+      "litros_dia": 3.31
+    },
+    {
+      "cultivo": "Papa Pastusa",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Tarde",
+      "litros_est": 160.19,
+      "litros_dia": 3.96
+    },
+    {
+      "cultivo": "Papa Pastusa",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Noche",
+      "litros_est": 11.88,
+      "litros_dia": 0.29
+    },
+    {
+      "cultivo": "Papa Pastusa",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Madrugada",
+      "litros_est": 8.25,
+      "litros_dia": 0.14
+    },
+    {
+      "cultivo": "Papa Pastusa",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Mañana",
+      "litros_est": 300.97,
+      "litros_dia": 5.1
+    },
+    {
+      "cultivo": "Papa Pastusa",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Tarde",
+      "litros_est": 435.93,
+      "litros_dia": 7.39
+    },
+    {
+      "cultivo": "Papa Pastusa",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Noche",
+      "litros_est": 60.5,
+      "litros_dia": 1.03
+    },
+    {
+      "cultivo": "Papa Sabanera",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Madrugada",
+      "litros_est": 24.18,
+      "litros_dia": 0.6
+    },
+    {
+      "cultivo": "Papa Sabanera",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Mañana",
+      "litros_est": 102.69,
+      "litros_dia": 2.54
+    },
+    {
+      "cultivo": "Papa Sabanera",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Tarde",
+      "litros_est": 197.7,
+      "litros_dia": 4.89
+    },
+    {
+      "cultivo": "Papa Sabanera",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Noche",
+      "litros_est": 34.629999999999995,
+      "litros_dia": 0.86
+    },
+    {
+      "cultivo": "Papa Sabanera",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Madrugada",
+      "litros_est": 31.89,
+      "litros_dia": 0.54
+    },
+    {
+      "cultivo": "Papa Sabanera",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Mañana",
+      "litros_est": 262.44,
+      "litros_dia": 4.45
+    },
+    {
+      "cultivo": "Papa Sabanera",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Tarde",
+      "litros_est": 479.87,
+      "litros_dia": 8.13
+    },
+    {
+      "cultivo": "Papa Sabanera",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Noche",
+      "litros_est": 96.02000000000001,
+      "litros_dia": 1.63
+    },
+    {
+      "cultivo": "Tomate Chonto",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Madrugada",
+      "litros_est": 59.1,
+      "litros_dia": 1.46
+    },
+    {
+      "cultivo": "Tomate Chonto",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Mañana",
+      "litros_est": 287.42,
+      "litros_dia": 7.11
+    },
+    {
+      "cultivo": "Tomate Chonto",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Tarde",
+      "litros_est": 360.62,
+      "litros_dia": 8.92
+    },
+    {
+      "cultivo": "Tomate Chonto",
+      "temporada": "Lluviosa (mar–abr)",
+      "franja": "Noche",
+      "litros_est": 70.8,
+      "litros_dia": 1.75
+    },
+    {
+      "cultivo": "Tomate Chonto",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Madrugada",
+      "litros_est": 81.69,
+      "litros_dia": 1.38
+    },
+    {
+      "cultivo": "Tomate Chonto",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Mañana",
+      "litros_est": 419.91,
+      "litros_dia": 7.12
+    },
+    {
+      "cultivo": "Tomate Chonto",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Tarde",
+      "litros_est": 548.87,
+      "litros_dia": 9.3
+    },
+    {
+      "cultivo": "Tomate Chonto",
+      "temporada": "Seca (ene–feb)",
+      "franja": "Noche",
+      "litros_est": 96.48,
+      "litros_dia": 1.64
+    }
+  ],
+  "m1_franja_pct": {
+    "Madrugada": 5.7,
+    "Mañana": 34.8,
+    "Tarde": 49.9,
+    "Noche": 9.7
+  },
+  "m1_tarde_pct": {
+    "Campo abierto · Seca (ene–feb)": 51.2,
+    "Campo abierto · Lluviosa (mar–abr)": 48.9,
+    "Invernadero · Seca (ene–feb)": 47.9,
+    "Invernadero · Lluviosa (mar–abr)": 46.4
+  },
+  "m1_cultivo_temporada": [
+    {
+      "cultivo": "Fríjol Cargamanto",
+      "Lluviosa (mar–abr)": 6.49,
+      "Seca (ene–feb)": 12.48,
+      "cambio_pct": -48.0
+    },
+    {
+      "cultivo": "Hortalizas Varias",
+      "Lluviosa (mar–abr)": 12.58,
+      "Seca (ene–feb)": 18.74,
+      "cambio_pct": -32.9
+    },
+    {
+      "cultivo": "Maíz Forrajero",
+      "Lluviosa (mar–abr)": 14.01,
+      "Seca (ene–feb)": 19.15,
+      "cambio_pct": -26.8
+    },
+    {
+      "cultivo": "Papa Criolla",
+      "Lluviosa (mar–abr)": 10.68,
+      "Seca (ene–feb)": 15.89,
+      "cambio_pct": -32.8
+    },
+    {
+      "cultivo": "Papa Pastusa",
+      "Lluviosa (mar–abr)": 8.1,
+      "Seca (ene–feb)": 13.66,
+      "cambio_pct": -40.7
+    },
+    {
+      "cultivo": "Papa Sabanera",
+      "Lluviosa (mar–abr)": 8.89,
+      "Seca (ene–feb)": 14.75,
+      "cambio_pct": -39.7
+    },
+    {
+      "cultivo": "Tomate Chonto",
+      "Lluviosa (mar–abr)": 19.24,
+      "Seca (ene–feb)": 19.44,
+      "cambio_pct": -1.0
+    }
+  ],
+  "validacion": {
+    "lecturas_por_disp_min": 143015,
+    "lecturas_por_disp_max": 143041,
+    "eventos_por_disp_min": 92,
+    "eventos_por_disp_max": 216,
+    "eventos_por_celda_m1_min": 1,
+    "lecturas_deficit": 1227,
+    "pct_deficit": 0.123
+  }
+}

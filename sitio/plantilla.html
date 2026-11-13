@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riego Inteligente Gachancipá · PGC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Diseño: cuaderno técnico de campo. Menú lateral fijo + columna de lectura;
+   azul agua para datos, verde campo para estructura, un solo tema claro a propósito. */
+:root {
+  color-scheme: light;
+  --bg: #f4f6f2;
+  --paper: #ffffff;
+  --ink: #14211a;
+  --ink-2: #4b5a51;
+  --muted: #7d8a82;
+  --line: #dde3dc;
+  --field: #24573f;
+  --field-soft: #e4eee7;
+  --water: #2a78d6;
+  --water-soft: #e3eefb;
+  --alert: #eb6834;
+  --alert-soft: #fdeee6;
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.62 var(--font-body); }
+a { color: var(--water); }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--water); outline-offset: 2px; border-radius: 4px; }
+img { max-width: 100%; height: auto; display: block; }
+
+.shell { display: grid; grid-template-columns: 270px minmax(0, 1fr); min-height: 100%; }
+nav.menu { position: sticky; top: 0; height: 100vh; overflow-y: auto; background: var(--field); color: #eaf2ec; padding: 24px 18px 32px; }
+nav.menu .marca { font-family: var(--font-display); font-weight: 800; font-size: 19px; line-height: 1.15; letter-spacing: -0.01em; margin: 0 0 4px; }
+nav.menu .sub { font-size: 12.5px; color: #b9cfc0; margin: 0 0 20px; }
+nav.menu ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; counter-reset: s; }
+nav.menu li a { display: flex; gap: 10px; align-items: baseline; color: #eaf2ec; text-decoration: none; padding: 6px 10px; border-radius: 6px; font-size: 14.5px; }
+nav.menu li a::before { counter-increment: s; content: counter(s, decimal-leading-zero); font-family: var(--font-mono); font-size: 11.5px; color: #9fbfab; min-width: 18px; }
+nav.menu li a:hover, nav.menu li a.activo { background: rgba(255,255,255,.12); }
+nav.menu .grupo { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: #9fbfab; margin: 14px 10px 4px; }
+
+main { padding: 40px clamp(16px, 4vw, 56px) 80px; min-width: 0; }
+.col { max-width: 920px; margin: 0 auto; }
+header.portada { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 32px clamp(18px, 4vw, 40px); margin-bottom: 32px; display: grid; grid-template-columns: minmax(0, 1fr) 210px; gap: 28px; align-items: start; }
+header.portada .kicker { font-family: var(--font-mono); font-size: 12.5px; color: var(--field); text-transform: uppercase; letter-spacing: .06em; margin: 0 0 8px; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(28px, 3.6vw, 40px); line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 14px; text-wrap: balance; }
+h2 { font-family: var(--font-display); font-weight: 700; font-size: 27px; line-height: 1.15; letter-spacing: -0.01em; margin: 0 0 6px; text-wrap: balance; }
+h3 { font-family: var(--font-display); font-weight: 700; font-size: 19px; margin: 28px 0 8px; }
+h4 { font-size: 15px; margin: 18px 0 6px; color: var(--field); text-transform: uppercase; letter-spacing: .05em; }
+p { margin: 0 0 12px; max-width: 72ch; }
+.lead { font-size: 17.5px; color: var(--ink-2); }
+section.sec { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 30px clamp(18px, 4vw, 40px); margin-bottom: 24px; }
+.sec > .num { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); margin: 0 0 6px; }
+.sec > .bajada { color: var(--ink-2); margin-bottom: 18px; }
+
+dl.ficha { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; margin: 0; font-size: 15px; }
+dl.ficha dt { color: var(--muted); }
+dl.ficha dd { margin: 0; font-weight: 500; }
+.completar { background: #fff6cf; border-bottom: 2px dashed #d6a800; padding: 0 4px; border-radius: 3px; }
+
+.tabla-wrap { overflow-x: auto; margin: 12px 0 16px; border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: var(--field-soft); color: var(--field); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .03em; }
+tr:last-child td { border-bottom: 0; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+code, .mono { font-family: var(--font-mono); font-size: 13.5px; background: #f0f3ef; padding: 1px 5px; border-radius: 4px; }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 14px 0 6px; }
+.kpi { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: #fbfcfa; }
+.kpi .v { font-family: var(--font-display); font-weight: 800; font-size: 28px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.kpi .v small { font-size: 15px; font-weight: 600; color: var(--ink-2); }
+.kpi .l { font-size: 13px; color: var(--ink-2); margin-top: 4px; }
+.kpi .d { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+.galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 10px; margin: 12px 0; }
+figure { margin: 0; }
+.galeria figure { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: #fbfcfa; }
+.galeria img { aspect-ratio: 3/4; object-fit: cover; width: 100%; }
+.galeria figcaption { font-size: 12.5px; padding: 8px 10px; color: var(--ink-2); }
+figure.ancha { border: 1px solid var(--line); border-radius: 10px; padding: 12px; background: #fbfcfa; margin: 14px 0 18px; }
+figure.ancha figcaption { font-size: 13px; color: var(--ink-2); margin-top: 8px; }
+.dos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.etapas { display: grid; gap: 10px; counter-reset: e; margin: 12px 0; }
+.etapa { display: grid; grid-template-columns: 44px 1fr; gap: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; }
+.etapa::before { counter-increment: e; content: counter(e); display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--field); color: #fff; font-family: var(--font-display); font-weight: 700; }
+.etapa h5 { margin: 0 0 4px; font-size: 15.5px; }
+.etapa p { margin: 0 0 4px; font-size: 14.5px; }
+.etapa .ev { font-size: 13px; color: var(--muted); }
+
+.pbi { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #fbfcfa; }
+.pbi iframe { width: 100%; aspect-ratio: 16 / 10; border: 0; display: block; }
+.pbi-aviso { padding: 22px; border-left: 5px solid var(--alert); background: var(--alert-soft); }
+.pbi-aviso p { margin-bottom: 6px; }
+
+.preguntas { counter-reset: q; display: grid; gap: 8px; padding: 0; list-style: none; }
+.preguntas li { padding: 10px 14px 10px 46px; position: relative; border: 1px solid var(--line); border-radius: 8px; }
+.preguntas li::before { counter-increment: q; content: "P" counter(q); position: absolute; left: 12px; top: 10px; font-family: var(--font-mono); font-size: 12.5px; color: var(--water); font-weight: 500; }
+
+article.conoc { border: 1px solid var(--line); border-radius: 12px; margin: 22px 0; overflow: hidden; }
+article.conoc > header { background: var(--water-soft); padding: 16px 20px; border-bottom: 1px solid var(--line); }
+article.conoc > header .tag { font-family: var(--font-mono); font-size: 12px; color: var(--water); text-transform: uppercase; letter-spacing: .05em; }
+article.conoc > header h3 { margin: 4px 0 0; }
+article.conoc .cuerpo { padding: 6px 20px 18px; }
+.campos { display: grid; grid-template-columns: 150px 1fr; gap: 0; margin: 10px 0; }
+.campos > div { padding: 9px 0; border-bottom: 1px solid var(--line); }
+.campos > div:nth-last-child(-n+2) { border-bottom: 0; }
+.campos .k { font-weight: 600; color: var(--field); font-size: 14px; padding-right: 12px; }
+.campos .v { font-size: 15px; }
+.grafico { border: 1px solid var(--line); border-radius: 10px; padding: 14px 14px 8px; margin: 10px 0; background: #fff; }
+.grafico .tit { font-weight: 600; font-size: 14.5px; margin: 0 0 2px; }
+.grafico .nota { font-size: 12.5px; color: var(--muted); margin: 0 0 8px; }
+.hallazgo { border-left: 4px solid var(--water); padding: 2px 0 2px 12px; }
+
+article.decision { border: 1px solid var(--line); border-left: 6px solid var(--field); border-radius: 10px; padding: 16px 20px; margin: 18px 0; }
+article.decision h3 { margin-top: 2px; }
+.chip { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: var(--field-soft); color: var(--field); margin-right: 6px; }
+.chip.alerta { background: var(--alert-soft); color: #a8411a; }
+ul.check { padding-left: 0; list-style: none; display: grid; gap: 8px; }
+ul.check li { padding-left: 28px; position: relative; }
+ul.check li::before { content: "✓"; position: absolute; left: 4px; top: 0; color: var(--field); font-weight: 700; }
+.refs li { margin-bottom: 8px; font-size: 14.5px; }
+footer.pie { text-align: center; color: var(--muted); font-size: 13px; padding: 20px 0 0; }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  nav.menu { position: static; height: auto; padding: 16px; }
+  nav.menu ol { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+  nav.menu .grupo { display: none; }
+  header.portada { grid-template-columns: 1fr; }
+  .dos { grid-template-columns: 1fr; }
+  .campos { grid-template-columns: 1fr; }
+  .campos > div.k { border-bottom: 0; padding-bottom: 0; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<nav class="menu" aria-label="Secciones del proyecto">
+  <p class="marca">Riego Inteligente Gachancipá</p>
+  <p class="sub">Proyecto de Gestión del Conocimiento · Ciudad inteligente</p>
+  <div class="grupo">Proyecto</div>
+  <ol>
+    <li><a href="#identificacion">Identificación</a></li>
+    <li><a href="#problema">Planteamiento del problema</a></li>
+    <li><a href="#justificacion">Justificación</a></li>
+    <li><a href="#objetivos">Objetivos</a></li>
+    <li><a href="#marco">Marco referencial</a></li>
+    <li><a href="#metodologia">Metodología y cronograma</a></li>
+    <li><a href="#solucion">Desarrollo de la solución</a></li>
+    <li><a href="#datos">Gestión de los datos</a></li>
+    <li><a href="#dashboard">Dashboard Power BI</a></li>
+    <li><a href="#conocimientos">Conocimientos evidentes</a></li>
+    <li><a href="#validacion">Validación</a></li>
+    <li><a href="#decisiones">Decisiones</a></li>
+    <li><a href="#resultados">Productos y resultados</a></li>
+    <li><a href="#conclusiones">Conclusiones y referencias</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="col">
+
+<header class="portada" id="inicio">
+  <div>
+    <p class="kicker">PGC · Módulo de ciudad inteligente · Agricultura de precisión</p>
+    <h1>Sistema IoT de riego inteligente con ESP32, Data Warehouse y analítica en Power BI</h1>
+    <p class="lead">Siete nodos ESP32 miden la humedad del suelo y el clima de siete fincas de Gachancipá, riegan solos cuando el cultivo lo necesita y envían cada lectura a SQL Server. Aquí está documentado el proyecto completo: desde el circuito hasta las decisiones que salen de 1.001.200 mediciones.</p>
+  </div>
+  <figure><img src="img/esp32.jpg" alt="Placa ESP32 DEVKIT V1 del prototipo, sostenida en la mano" style="border-radius:10px"></figure>
+</header>
+
+<!-- 01 IDENTIFICACIÓN -->
+<section class="sec" id="identificacion">
+  <p class="num">01</p>
+  <h2>Identificación</h2>
+  <dl class="ficha">
+    <dt>Título</dt><dd>Sistema IoT de riego inteligente para cultivos de Gachancipá con ESP32, Data Warehouse y analítica en Power BI</dd>
+    <dt>Programa académico</dt><dd><span class="completar">Ingeniería de Sistemas y Computación</span></dd>
+    <dt>Institución y sede</dt><dd>Universidad de Cundinamarca · Extensión Chía · Facultad de Ingeniería</dd>
+    <dt>Curso</dt><dd>Big Data</dd>
+    <dt>Ciclo de formación</dt><dd><span class="completar">Profesional · semestre ___</span></dd>
+    <dt>Integrantes</dt><dd>Camilo Andrés Sichaca Cañón · Hellen Camila Beltrán Reyes</dd>
+    <dt>Tipo de proyecto</dt><dd>Proyecto de Gestión del Conocimiento (PGC) de desarrollo tecnológico: prototipo IoT con analítica de datos</dd>
+    <dt>Módulo de ciudad inteligente</dt><dd>Gestión eficiente del agua en la agricultura periurbana</dd>
+    <dt>Año</dt><dd>2026</dd>
+  </dl>
+</section>
+
+<!-- 02 PROBLEMA -->
+<section class="sec" id="problema">
+  <p class="num">02</p>
+  <h2>Planteamiento del problema</h2>
+  <p class="bajada">La necesidad que atiende el módulo y el contexto en el que aparece.</p>
+  <p>En las fincas de Gachancipá (Cundinamarca, unos 2.550–2.600 m s. n. m.) el riego se decide a ojo o con horarios fijos. Eso tiene dos efectos: se riega cuando el suelo todavía tiene agua, lo que la desperdicia, o se deja de regar cuando el cultivo la necesita, lo que causa estrés hídrico. Además, no queda ningún registro con el cual revisar qué pasó.</p>
+  <p>El problema importa por la escala del uso del agua. Según la FAO, la agricultura representa alrededor del 70 % de las extracciones mundiales de agua dulce. A eso se suma el clima de la Sabana de Bogotá, que tiene un régimen de lluvias bimodal: enero y febrero son secos y marzo y abril lluviosos. Por eso la demanda de riego cambia mucho a lo largo del año, y un horario fijo no se adapta a esos cambios.</p>
+  <p>Tener un controlador automático no es suficiente. El productor también necesita saber cuánta agua usa, en qué cultivos y a qué horas, y si los sensores y la red están fallando. Sin esa información no puede ajustar umbrales, programar mantenimiento ni prever cuánta agua va a necesitar.</p>
+  <p class="hallazgo"><strong>Pregunta del proyecto:</strong> ¿cómo automatizar el riego de cultivos de pequeña escala con un prototipo IoT de bajo costo, y convertir sus mediciones en conocimiento verificable que oriente la gestión del agua y del propio sistema?</p>
+</section>
+
+<!-- 03 JUSTIFICACIÓN -->
+<section class="sec" id="justificacion">
+  <p class="num">03</p>
+  <h2>Justificación</h2>
+  <h4>Población beneficiaria</h4>
+  <ul>
+    <li><strong>Propietarios y productores</strong> de las siete fincas del escenario: El Progreso, San José, La Esperanza, El Mirador, Villa Luz, La Virginia y Santa Bárbara. Reciben el riego automático y un tablero con su consumo.</li>
+    <li><strong>Técnicos de campo</strong>, que ven qué nodo falla y dónde, y pueden programar el mantenimiento a partir de datos.</li>
+    <li><strong>Entidades del municipio</strong> (la UMATA o la secretaría de agricultura), que pueden usar el modelo de datos para planear el uso del agua durante la temporada seca.</li>
+  </ul>
+  <h4>Pertinencia</h4>
+  <p>La solución usa componentes baratos y fáciles de conseguir: un ESP32, un sensor capacitivo o resistivo, un DHT11, un RTC DS3231 y un relé. Los datos quedan en un modelo relacional en 3FN y en un Data Warehouse que crece con nuevos nodos sin rediseño. Esto encaja con el eje de ciudad inteligente porque une la medición en campo, la automatización y la toma de decisiones con datos, y lo aplica a un recurso escaso en un municipio de la Sabana.</p>
+</section>
+
+<!-- 04 OBJETIVOS -->
+<section class="sec" id="objetivos">
+  <p class="num">04</p>
+  <h2>Objetivos</h2>
+  <h4>Objetivo general</h4>
+  <p>Diseñar, montar y programar un prototipo de riego inteligente basado en ESP32 que monitoree en tiempo real variables del suelo y del ambiente, riegue de forma automática y registre los eventos en una arquitectura SQL. Con esos datos, generar conocimiento verificable mediante un Data Warehouse y un dashboard de Power BI.</p>
+  <h4>Objetivos específicos</h4>
+  <ol>
+    <li>Adquirir datos con un sensor de humedad del suelo (ADC1, GPIO 34) y un sensor DHT11 de temperatura y humedad ambiente (GPIO 4).</li>
+    <li>Registrar la hora exacta de cada lectura y cada riego con el RTC DS3231 (I2C), incluso sin conexión a internet.</li>
+    <li>Controlar con seguridad una bomba DC mediante un relé optoaislado (GPIO 5), con reglas de umbral, un tiempo máximo y una espera mínima entre riegos.</li>
+    <li>Modelar la información en SQL Server (3FN), simular un millón de mediciones e integrarlas en un Data Warehouse con un ETL en SSIS.</li>
+    <li>Construir un dashboard con indicadores y análisis univariados, bivariados y multivariados; documentar cinco conocimientos y dos decisiones, y publicarlo todo en este sitio.</li>
+  </ol>
+</section>
+
+<!-- 05 MARCO -->
+<section class="sec" id="marco">
+  <p class="num">05</p>
+  <h2>Marco referencial</h2>
+  <p class="bajada">Antecedentes que sustentan la solución.</p>
+  <div class="tabla-wrap"><table>
+    <thead><tr><th>Antecedente</th><th>Aporte al proyecto</th></tr></thead>
+    <tbody>
+      <tr><td>Pereira, Chaari y Daroge (2023), <em>IoT-Enabled Smart Drip Irrigation System Using ESP32</em>, revista IoT (MDPI).</td><td>Usa un ESP32 conectado a sensores de humedad de suelo, temperatura, humedad del aire y caudal para automatizar el riego por goteo. Confirma que la arquitectura base elegida funciona.</td></tr>
+      <tr><td>Sistema de riego IoT de bajo costo (2025), <em>Applied Water Science</em>, Springer (s13201-025-02727-4).</td><td>Usa un ESP32 con sensor capacitivo y DHT11, y riega entre dos umbrales de humedad. Es el mismo esquema de histéresis (inicio y objetivo) que se usa aquí, con umbrales distintos para cada cultivo.</td></tr>
+      <tr><td>Lazaruk y Klym (2025), <em>Smart soil moisture monitoring for IoT-controlled automatic plant irrigation</em>, Lviv Polytechnic.</td><td>Usa un ESP32 DevKit V1 con DHT22 y una plataforma de datos. Muestra la ventaja de guardar las lecturas para analizarlas, no solo para controlar el riego.</td></tr>
+      <tr><td>FAO, AQUASTAT.</td><td>Indica que la agricultura representa cerca del 70 % de las extracciones de agua dulce. Es la justificación del problema.</td></tr>
+      <tr><td>IDEAM: régimen bimodal de lluvias en Bogotá y la Sabana.</td><td>Diciembre a febrero tienden a ser secos y marzo a mayo lluviosos. De aquí sale la dimensión <em>temporada</em> del DW y el diseño del escenario simulado.</td></tr>
+      <tr><td>Chapman et al. (2000), <em>CRISP-DM 1.0</em>.</td><td>Es el proceso de minería de datos con el que se organizó la metodología del proyecto.</td></tr>
+      <tr><td>Kimball y Ross (2013), <em>The Data Warehouse Toolkit</em>, 3.ª ed.</td><td>Es la base del modelo estrella: el grano de los hechos y las dimensiones conformadas.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 06 METODOLOGÍA -->
+<section class="sec" id="metodologia">
+  <p class="num">06</p>
+  <h2>Metodología y cronograma (CRISP-DM)</h2>
+  <p class="bajada">Las seis fases de CRISP-DM aplicadas al prototipo, con la actividad y la evidencia de cada una.</p>
+  <div class="etapas">
+    <div class="etapa"><div><h5>Comprensión del negocio</h5><p>Se definió el problema del riego empírico, los usuarios y los criterios de éxito: menos desperdicio de agua, trazabilidad completa y nodos confiables.</p><p class="ev">Evidencia: planteamiento del problema, objetivos y preguntas orientadoras (sección 09).</p></div></div>
+    <div class="etapa"><div><h5>Comprensión de los datos</h5><p>Se identificaron las variables que mide el firmware: <code>raw_suelo</code>, <code>suelo_pct</code>, temperatura, humedad relativa, estado de la bomba, Wi-Fi, cola de pendientes y falla del sensor.</p><p class="ev">Evidencia: prototipo armado (sección 07) y modelo relacional en 3FN.</p></div></div>
+    <div class="etapa"><div><h5>Preparación de los datos</h5><p>Se simularon 1.003.400 lecturas, incluyendo errores reales del IoT, y se hizo el ETL en SSIS con limpieza, cuarentena, deduplicación y búsqueda de claves.</p><p class="ev">Evidencia: scripts SQL, paquete SSIS y balance 1.003.400 = 1.200 + 1.000 + 1.001.200.</p></div></div>
+    <div class="etapa"><div><h5>Modelado</h5><p>Se construyó el modelo estrella, con dos tablas de hechos y tres dimensiones, y las medidas DAX de los indicadores y de los análisis univariados, bivariados y multivariado.</p><p class="ev">Evidencia: DW <code>RiegoInteligente_DW</code> y archivo de Power BI.</p></div></div>
+    <div class="etapa"><div><h5>Evaluación</h5><p>Se validaron los tamaños de los grupos, los valores faltantes y los atípicos, y se verificó cada cifra con consultas SQL que se pueden repetir.</p><p class="ev">Evidencia: <code>05_validaciones.sql</code>, <code>06_consultas_conocimientos.sql</code> y sección 11.</p></div></div>
+    <div class="etapa"><div><h5>Despliegue</h5><p>Se publicaron el dashboard en el servicio de Power BI y este sitio web, y se grabó el video de resultados.</p><p class="ev">Evidencia: URL del sitio, dashboard integrado e informe técnico en PDF.</p></div></div>
+  </div>
+  <h3>Cronograma</h3>
+  <p style="font-size:14px;color:var(--muted)">Semanas del semestre 2026-2 <span class="completar">ajustar a las fechas reales del curso</span>.</p>
+  <div class="tabla-wrap"><table>
+    <thead><tr><th>Actividad</th><th>Fase CRISP-DM</th><th class="n">Semanas</th><th>Evidencia</th></tr></thead>
+    <tbody>
+      <tr><td>Definición del problema y objetivos</td><td>Negocio</td><td class="n">1–2</td><td>Documento PGC</td></tr>
+      <tr><td>Montaje del circuito y firmware del ESP32</td><td>Datos</td><td class="n">3–6</td><td>Maqueta, fotos y código</td></tr>
+      <tr><td>Modelo relacional en SQL Server</td><td>Datos</td><td class="n">7–8</td><td>Diagrama y DDL</td></tr>
+      <tr><td>Simulación del millón de mediciones</td><td>Preparación</td><td class="n">9–10</td><td>Script y conteos</td></tr>
+      <tr><td>ETL en SSIS hacia el DW</td><td>Preparación</td><td class="n">11–12</td><td>Paquete y balance de filas</td></tr>
+      <tr><td>Dashboard en Power BI y análisis</td><td>Modelado y evaluación</td><td class="n">13–14</td><td>Archivo .pbix y consultas</td></tr>
+      <tr><td>Sitio web, informe y video</td><td>Despliegue</td><td class="n">15–16</td><td>URL, PDF y video</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 07 SOLUCIÓN -->
+<section class="sec" id="solucion">
+  <p class="num">07</p>
+  <h2>Desarrollo de la solución</h2>
+  <p class="bajada">Cómo funciona el módulo, quién lo usa, con qué dispositivos y con qué arquitectura.</p>
+
+  <h3>Descripción del módulo</h3>
+  <p>Cada lote tiene un nodo ESP32 que cada 2 segundos lee el suelo y el ambiente y aplica las reglas de riego. Cada 60 segundos envía un JSON por HTTP POST al servidor. Si se cae el Wi-Fi, guarda las lecturas en una cola de <em>pendientes</em> y las reenvía cuando vuelve la conexión. Las horas siempre las fija el RTC DS3231.</p>
+
+  <div class="tabla-wrap"><table>
+    <thead><tr><th>Regla del firmware</th><th>Condición</th></tr></thead>
+    <tbody>
+      <tr><td>Inicio de riego</td><td><code>suelo_pct &lt; humedad_min</code> del cultivo <strong>y</strong> temperatura &gt; 5 °C (protección contra heladas) <strong>y</strong> sensor sin falla <strong>y</strong> ≥ 30 min desde el último riego</td></tr>
+      <tr><td>Fin de riego</td><td>Se alcanza <code>humedad_max</code> (HUM_OBJETIVO), <strong>o</strong> pasan 5 min (TIEMPO_MAX), <strong>o</strong> falla el sensor (FALLA_SENSOR)</td></tr>
+      <tr><td>Umbrales por cultivo (%)</td><td>Papa Pastusa 60–75 · Papa Criolla 62–77 · Maíz Forrajero 50–68 · Tomate Chonto 65–80 · Hortalizas 63–78 · Papa Sabanera 58–74 · Fríjol Cargamanto 55–70</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Usuarios y procesos</h3>
+  <div class="tabla-wrap"><table>
+    <thead><tr><th>Usuario</th><th>Proceso</th><th>Qué obtiene</th></tr></thead>
+    <tbody>
+      <tr><td>Propietario o productor</td><td>Monitoreo y control de riego</td><td>Riego automático por umbral y consumo estimado en litros</td></tr>
+      <tr><td>Técnico de campo</td><td>Seguimiento de dispositivos</td><td>Tasa de fallas del sensor y de pérdida de Wi-Fi por nodo</td></tr>
+      <tr><td>Analista o administrador</td><td>Gestión de datos (ETL y DW)</td><td>Datos limpios, cuarentena auditada y dashboard</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Dispositivos</h3>
+  <div class="galeria">
+    <figure><img src="img/esp32.jpg" alt="ESP32 DEVKIT V1"><figcaption><strong>ESP32 DEVKIT V1</strong>: procesamiento y Wi-Fi</figcaption></figure>
+    <figure><img src="img/sensor_suelo.jpg" alt="Sensor de humedad de suelo FC-28"><figcaption><strong>Sensor de suelo FC-28</strong>: analógico en GPIO 34 (ADC1)</figcaption></figure>
+    <figure><img src="img/dht11.jpg" alt="Sensor DHT11"><figcaption><strong>DHT11</strong>: temperatura y humedad en GPIO 4</figcaption></figure>
+    <figure><img src="img/rtc_ds3231.jpg" alt="Módulo RTC DS3231"><figcaption><strong>RTC DS3231</strong>: I2C en GPIO 21 (SDA) y 22 (SCL)</figcaption></figure>
+    <figure><img src="img/rele.jpg" alt="Módulo relé optoaislado"><figcaption><strong>Relé optoaislado</strong>: GPIO 5, alimentado a 5 V por VIN</figcaption></figure>
+    <figure><img src="img/bomba.jpg" alt="Bomba de agua DC sumergida"><figcaption><strong>Bomba DC</strong> con fuente externa (COM/NO)</figcaption></figure>
+  </div>
+
+  <h3>Funcionalidades</h3>
+  <ul class="check">
+    <li>Conversión del valor ADC a porcentaje de humedad con la calibración <code>raw_seco</code> y <code>raw_mojado</code> de cada nodo.</li>
+    <li>Riego automático por histéresis, con umbrales distintos por cultivo y tres protecciones: helada, tiempo máximo y falla del sensor.</li>
+    <li>Registro con hora del RTC y transmisión en JSON, con cola de reintento cuando no hay red.</li>
+    <li>Almacenamiento relacional, ETL con control de calidad y análisis en Power BI publicado en la web.</li>
+  </ul>
+
+  <h3>Arquitectura</h3>
+  <figure class="ancha">
+    {{arquitectura}}
+    <figcaption>Flujo de datos de extremo a extremo: del sensor a la decisión.</figcaption>
+  </figure>
+  <h3>Tecnologías</h3>
+  <p>Arduino IDE 2.x (C++ con las librerías RTClib y DHT de Adafruit) · SQL Server 2019+ y SSMS · SQL Server Integration Services (Visual Studio) · Power BI Desktop y el servicio de Power BI · HTML y CSS para este sitio · Python (pandas y NumPy) para generar la simulación de forma reproducible.</p>
+</section>
+
+<!-- 08 DATOS -->
+<section class="sec" id="datos">
+  <p class="num">08</p>
+  <h2>Gestión de los datos</h2>
+  <p class="bajada">Modelo relacional, modelo multidimensional, simulación del millón de mediciones y ETL en SSIS.</p>
+
+  <h3>Modelo relacional (OLTP, 3FN)</h3>
+  <div class="dos">
+    <figure class="ancha" style="margin:0"><img src="img/modelo_relacional.jpg" alt="Diagrama del modelo relacional en SQL Server"><figcaption>Diagrama en SSMS de la base <code>RiegoInteligente</code>.</figcaption></figure>
+    <div>
+      <ul>
+        <li><strong>Propietario</strong> 1─N <strong>Finca</strong>: los usuarios y sus terrenos.</li>
+        <li><strong>Finca</strong> 1─N <strong>Lote</strong>: la estructura del territorio.</li>
+        <li><strong>Cultivo</strong> 1─N <strong>Lote</strong>: umbrales <code>humedad_min</code> y <code>humedad_max</code>.</li>
+        <li><strong>Lote</strong> 1─N <strong>Dispositivo</strong>: dónde está el hardware y su calibración.</li>
+        <li><strong>Dispositivo</strong> 1─N <strong>Lectura</strong>: la telemetría de cada minuto.</li>
+        <li><strong>Dispositivo</strong> 1─N <strong>EventoRiego</strong>: inicio, fin, duración, litros y motivo de fin.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Modelo multidimensional (Data Warehouse)</h3>
+  <figure class="ancha">
+    {{estrella}}
+    <figcaption>Modelo estrella de <code>RiegoInteligente_DW</code>. Grano de <code>Fact_Lectura</code>: una lectura por dispositivo por minuto. Grano de <code>Fact_EventoRiego</code>: un ciclo de riego.</figcaption>
+  </figure>
+
+  <h3>Simulación del millón de mediciones</h3>
+  <p>La simulación se rehízo con una semilla fija (<code>20250101</code>) para que cualquiera pueda reproducirla. Respeta las mismas reglas del firmware y el mismo esquema de tablas.</p>
+  <div class="tabla-wrap"><table>
+    <tbody>
+      <tr><th>Período y frecuencia</th><td>Del 01/01/2025 00:00 al 10/04/2025 10:39 (99,44 días), una lectura por minuto por nodo</td></tr>
+      <tr><th>Volumen</th><td>7 nodos × 143.200 minutos = 1.002.400 lecturas, más 1.000 reenvíos duplicados = <strong>1.003.400</strong> en <code>Lectura</code>. Además, 992 eventos de riego.</td></tr>
+      <tr><th>Clima</th><td>Ciclo diario de temperatura (mínima a las 6 h, máxima a las 14 h). La temporada seca (ene–feb) tiene noches más frías, con heladas ocasionales. En la temporada lluviosa (mar–abr) la probabilidad de un aguacero por la tarde sube de 10 % a 62 % por día.</td></tr>
+      <tr><th>Suelo</th><td>La humedad baja según el cultivo, el tipo de suelo (el arenoso drena más rápido y el arcilloso retiene más), el sol y la temperatura. Sube con la lluvia y con la bomba. El invernadero (Tomate Chonto) no recibe lluvia y es más cálido.</td></tr>
+      <tr><th>Comportamientos de los nodos</th><td>Fallas de sensor en episodios de 3 a 18 min (raw = 4095). En <code>ESP32_VillaLuz_05</code> las fallas aumentan con el tiempo. <code>ESP32_Virginia_06</code> tiene mala cobertura Wi-Fi y acumula pendientes.</td></tr>
+      <tr><th>Errores inyectados para el ETL</th><td>
+        <ul style="margin:0;padding-left:18px">
+          <li>Para rechazar: 150 sin dispositivo, 150 con métricas nulas, 150 con fecha de 1970 y 150 con fecha de 2099; 200 con temperatura &gt; 80 °C, 200 con humedad relativa &gt; 100 % y 200 con ADC negativo.</li>
+          <li>Para corregir: 300 porcentajes fuera de 0–100, 200 IDs en minúsculas o con espacios, 200 con bomba en formato SI/NO, 1.000 con <code>#</code> en <code>falla_sensor</code> y 800 con <code>falla_sensor</code> nulo.</li>
+        </ul>
+      </td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Proceso ETL en SSIS</h3>
+  <div class="dos">
+    <figure class="ancha" style="margin:0"><img src="img/ssis_data_flow.jpg" alt="Flujo de datos del paquete SSIS con Derived Column y Conditional Split"><figcaption>Data Flow: OLE DB Source → Derived Column → Conditional Split.</figcaption></figure>
+    <figure class="ancha" style="margin:0"><img src="img/ssis_split_sort.jpg" alt="Salidas del Conditional Split y componente Sort"><figcaption>Salidas a cuarentena y Sort con eliminación de duplicados → Fact.</figcaption></figure>
+  </div>
+  <ol>
+    <li><strong>Extracción</strong> desde <code>RiegoInteligente.dbo.Lectura</code> (OLE DB).</li>
+    <li><strong>Derived Column:</strong> <code>UPPER(TRIM(id))</code>; ON/SI se convierte en 1 y OFF/NO en 0; Wi-Fi SI se convierte en 1; <code>suelo_pct</code> se acota a 0–100; se quita el <code>#</code> de <code>falla_sensor</code> y los nulos pasan a <code>OK</code>; se calculan las claves <code>sk_fecha</code> y <code>sk_hora</code>.</li>
+    <li><strong>Conditional Split:</strong> Sin_Dispositivo_O_Nulos, Fecha_Invalida (antes de 2025-01-01 o en el futuro) y Sensor_Fuera_Rango_Critico. Estas filas van a <code>Lectura_Cuarentena</code> con su motivo.</li>
+    <li><strong>Lookup</strong> de <code>sk_dispositivo</code> en <code>Dim_Dispositivo</code>, seguido de un <strong>Sort</strong> por dispositivo y fecha que elimina los duplicados.</li>
+    <li><strong>Carga</strong> en <code>Fact_Lectura</code> después de un <code>TRUNCATE</code>, para que la carga sea idempotente. <code>Fact_EventoRiego</code> se carga en un flujo aparte.</li>
+  </ol>
+  <div class="tabla-wrap"><table>
+    <thead><tr><th>Métrica de ejecución</th><th class="n">Filas</th></tr></thead>
+    <tbody>
+      <tr><td>Extraídos del origen</td><td class="n">1.003.400</td></tr>
+      <tr><td>Cuarentena · Sin_Dispositivo_O_Nulos</td><td class="n">300</td></tr>
+      <tr><td>Cuarentena · Fecha_Invalida</td><td class="n">300</td></tr>
+      <tr><td>Cuarentena · Sensor_Fuera_Rango_Critico</td><td class="n">600</td></tr>
+      <tr><td>Duplicados eliminados (Sort)</td><td class="n">1.000</td></tr>
+      <tr><td><strong>Cargados en Fact_Lectura</strong></td><td class="n"><strong>1.001.200</strong></td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Balance:</strong> 1.003.400 = 1.200 rechazados + 1.000 duplicados + 1.001.200 cargados. El script <code>04_etl_tsql.sql</code> aplica las mismas reglas y debe dar exactamente los mismos conteos.</p>
+</section>
+
+<!-- 09 DASHBOARD -->
+<section class="sec" id="dashboard">
+  <p class="num">09</p>
+  <h2>Dashboard de Power BI</h2>
+  <p class="bajada">El tablero es interactivo: usen los segmentadores de fecha, temporada, ubicación, cultivo, dispositivo y franja.</p>
+  <div class="pbi" id="pbi">
+    <iframe id="pbi-frame" title="Dashboard Power BI · Riego Inteligente Gachancipá" src="https://app.powerbi.com/view?r=eyJrIjoiZWYwNDM3NGUtZWVmZS00NzFlLWE5MjktMDdiODU5NDMyYmJlIiwidCI6IjA3ZGE2N2EwLTFmNDMtNGU4Yy05NzdmLTVmODhiNjQ3MGVlNiIsImMiOjR9" allowfullscreen loading="lazy"></iframe>
+    <div class="pbi-aviso" id="pbi-aviso" hidden>
+      <p><strong>Falta conectar el dashboard.</strong> En el servicio de Power BI vayan a <em>Archivo → Insertar informe → Publicar en la web</em> (o <em>Sitio web o portal</em>), copien la URL del <code>src</code> y reemplacen <code>PEGUE_AQUI_LA_URL_DE_POWER_BI</code> en <code>index.html</code>.</p>
+      <p style="font-size:14px;color:var(--ink-2)">Si usan <em>Sitio web o portal</em>, el visitante debe iniciar sesión con una cuenta que tenga acceso al informe, así que compártanlo con el correo del docente.</p>
+    </div>
+  </div>
+
+  <h3>Documentación de los datos del tablero</h3>
+  <div class="tabla-wrap"><table>
+    <tbody>
+      <tr><th>Fuente</th><td>SQL Server · <code>RiegoInteligente_DW</code> (<code>Fact_Lectura</code>, <code>Fact_EventoRiego</code>, <code>Dim_Dispositivo</code>, <code>Dim_Tiempo</code>, <code>Dim_Hora</code>, <code>Lectura_Cuarentena</code>), en modo importación</td></tr>
+      <tr><th>Período</th><td>01/01/2025 00:00 – 10/04/2025 10:39 (99,44 días). Abril está incompleto (9,44 días), por eso las comparaciones entre meses se hacen <em>por día</em>.</td></tr>
+      <tr><th>Registros</th><td>1.001.200 lecturas válidas (143.015 a 143.041 por nodo) · 992 eventos de riego (92 a 216 por nodo) · 1.200 en cuarentena</td></tr>
+      <tr><th>Variables</th><td>suelo_pct, raw_suelo, temperatura_c, humedad_rel_pct, bomba_on, wifi_ok, falla_sensor, pendientes · duracion_seg, litros_est, motivo_fin · cultivo, tipo_suelo, ubicación, finca · fecha, mes, temporada · hora, franja</td></tr>
+      <tr><th>Reglas de calidad</th><td>Rechazo de filas sin dispositivo o con métricas nulas, fechas fuera de rango y lecturas físicamente imposibles · acotamiento de suelo_pct a 0–100 · homologación SI/NO/ON/OFF · deduplicación por (dispositivo, fecha_hora) · los promedios agronómicos excluyen las lecturas con falla del sensor</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Preguntas que orientan el análisis</h3>
+  <ol class="preguntas">
+    <li>¿Qué tan confiable es la medición de humedad del suelo y qué parte de los valores extremos son errores del sensor? <em>(calidad del dato)</em></li>
+    <li>¿Algún nodo falla más que los otros y la falla está empeorando? <em>(mantenimiento)</em></li>
+    <li>¿Algún nodo pierde la conexión más que los otros, y qué efecto tiene en los datos? <em>(oportunidad del dato)</em></li>
+    <li>¿Cómo cambia el consumo de agua entre la temporada seca y la lluviosa, en campo abierto y en invernadero? <em>(planeación hídrica)</em></li>
+    <li>¿En qué cultivos y franjas horarias se concentra la demanda, según la temporada? <em>(programación del recurso)</em></li>
+  </ol>
+
+  <h3>Indicadores generales</h3>
+  <div class="kpis">
+    <div class="kpi"><div class="v">1.001.200</div><div class="l">Lecturas válidas</div><div class="d">7 dispositivos activos</div></div>
+    <div class="kpi"><div class="v">71,76<small> %</small></div><div class="l">Humedad media del suelo</div><div class="d">Excluye las lecturas con falla del sensor</div></div>
+    <div class="kpi"><div class="v">100,2<small> L/día</small></div><div class="l">Agua estimada (7 nodos)</div><div class="d">9.967,9 L en 992 riegos</div></div>
+    <div class="kpi"><div class="v">1,67<small> %</small></div><div class="l">Lecturas con falla del sensor</div><div class="d">16.708 de 1.001.200</div></div>
+    <div class="kpi"><div class="v">1,83<small> %</small></div><div class="l">Lecturas sin Wi-Fi</div><div class="d">18.328 de 1.001.200</div></div>
+    <div class="kpi"><div class="v">244<small> s</small></div><div class="l">Duración media del riego</div><div class="d">Mediana 249 s · máximo 300 s</div></div>
+  </div>
+
+  <h3>Análisis univariados</h3>
+  <div class="grafico"><p class="tit">U1 · Distribución de la humedad del suelo</p><p class="nota">Lecturas válidas, ene–abr 2025 · n = 1.001.200 · bins de 2 % · en naranja, las lecturas en 0 %</p>{{svg:u1_humedad_suelo}}</div>
+  <div class="grafico"><p class="tit">U2 · Distribución de la temperatura ambiente</p><p class="nota">Lecturas válidas · bins de 1 °C · media 13,83 °C · mediana 13,82 °C · 4,38 % de las lecturas ≤ 5 °C</p>{{svg:u2_temperatura}}</div>
+  <div class="grafico"><p class="tit">U3 · Motivo de finalización del riego</p><p class="nota">% de los 992 eventos · duración media 244,4 s, mediana 249 s</p>{{svg:u3_motivo_fin}}</div>
+
+  <h3>Análisis bivariados</h3>
+  <div class="grafico"><p class="tit">B1 · Porcentaje de lecturas con falla del sensor por dispositivo</p><p class="nota">Denominador: lecturas válidas de cada dispositivo (a la derecha, fallas sobre total)</p>{{svg:b1_falla_dispositivo}}</div>
+  <div class="grafico"><p class="tit">B2 · Litros por día por nodo según mes y ubicación</p><p class="nota">Litros estimados ÷ días observados del mes ÷ nodos (6 en campo abierto, 1 en invernadero) · abril = 9,44 días</p>{{svg:b2_litros_mes}}</div>
+  <div class="grafico"><p class="tit">B3 · Eventos de riego por día según tipo de suelo</p><p class="nota">Eventos ÷ 99,44 días · cada barra es un nodo (tipo de suelo · dispositivo)</p>{{svg:b3_eventos_suelo}}</div>
+  <div class="grafico"><p class="tit">B4 · Porcentaje de lecturas sin Wi-Fi por dispositivo (complementario)</p><p class="nota">Denominador: lecturas válidas de cada dispositivo</p>{{svg:b4_wifi_dispositivo}}</div>
+
+  <h3>Análisis multivariado</h3>
+  <div class="grafico"><p class="tit">M1 · Litros por día según cultivo × temporada × franja horaria</p><p class="nota">Cada celda se calcula sobre los eventos que cumplen las tres condiciones a la vez: Σ litros ÷ días de la temporada (seca: 59; lluviosa: 40,44). Pasen el cursor para ver el total de litros.</p>{{svg:m1_cultivo_temporada_franja}}</div>
+</section>
+
+<!-- 10 CONOCIMIENTOS -->
+<section class="sec" id="conocimientos">
+  <p class="num">10</p>
+  <h2>Cinco conocimientos evidentes</h2>
+  <p class="bajada">Cada conocimiento sale de un análisis del dashboard y se puede reproducir con <code>06_consultas_conocimientos.sql</code>.</p>
+
+  <article class="conoc">
+    <header><span class="tag">Conocimiento 1 · univariado</span><h3>Las lecturas en 0 % son fallas del sensor, no suelos secos</h3></header>
+    <div class="cuerpo"><div class="campos">
+      <div class="k">Pregunta</div><div class="v">¿Qué tan confiable es la medición de humedad del suelo y qué representan los valores extremos? Si los datos son malos, cualquier decisión de riego también lo es.</div>
+      <div class="k">Variables</div><div class="v"><code>suelo_pct</code>, <code>falla_sensor</code></div>
+      <div class="k">Procedimiento</div><div class="v">Histograma con bins de 2 %. Media, mediana y desviación con todas las lecturas y sin las que tienen falla. Conteo de las lecturas en 0 % según el indicador de falla.</div>
+      <div class="k">Resultado</div><div class="v">16.873 lecturas (1,69 %) están en 0 %, y <strong>16.706 de ellas (99,0 %)</strong> tienen <code>falla_sensor</code> = 1 (raw = 4095). Con todas las lecturas: media 70,57 %, mediana 70,44 %, desviación 13,45. Sin fallas: media 71,76 %, mediana 70,63 %, desviación 9,90. {{svg:u1_humedad_suelo}}</div>
+      <div class="k">Hallazgo</div><div class="v hallazgo">El pico aislado en 0 % casi no tiene casos sin falla. Al excluir las fallas, la media sube 1,2 puntos y la desviación cae 26 %. La distribución sin fallas tiene una cola a la derecha (88–100 %, después de lluvias o riegos), por eso la media queda por encima de la mediana.</div>
+      <div class="k">Interpretación</div><div class="v">El 0 % no indica sequía: es la firma de un sensor desconectado. Si se mezclan esas lecturas con las válidas, el promedio de humedad baja y parece que los cultivos necesitan más agua de la que necesitan.</div>
+      <div class="k">Utilidad</div><div class="v">Fija una regla para todo el tablero: los indicadores agronómicos excluyen las lecturas con falla y la falla se mide como un indicador aparte. La mediana resume mejor la humedad típica.</div>
+      <div class="k">Limitación</div><div class="v">167 lecturas en 0 % no tienen la marca de falla. Vienen de valores negativos que el ETL acotó a 0, y con los datos disponibles no se puede saber si eran sequía real o un error de calibración.</div>
+    </div></div>
+  </article>
+
+  <article class="conoc">
+    <header><span class="tag">Conocimiento 2 · bivariado</span><h3>El sensor de VillaLuz_05 falla 8 veces más que los demás y empeora cada mes</h3></header>
+    <div class="cuerpo"><div class="campos">
+      <div class="k">Pregunta</div><div class="v">¿Hay nodos que fallan más que los otros, y la falla va en aumento? Un nodo con fallas deja su lote sin riego automático.</div>
+      <div class="k">Variables</div><div class="v"><code>falla_sensor</code>, <code>id_dispositivo</code>, mes</div>
+      <div class="k">Procedimiento</div><div class="v">% de lecturas con falla = lecturas con falla ÷ lecturas del dispositivo, comparado entre los 7 nodos y por mes entre VillaLuz_05 y el promedio de los otros seis.</div>
+      <div class="k">Resultado</div><div class="v">VillaLuz_05: <strong>6,76 %</strong> (9.672 de 143.020). Los otros seis nodos: entre 0,70 y 0,92 % (0,82 % en conjunto). Tendencia de VillaLuz_05: 3,03 % en enero, 6,37 % en febrero, 9,29 % en marzo y 11,87 % del 1 al 10 de abril. El resto se mantiene estable entre 0,78 y 0,88 %. {{svg:b1_falla_dispositivo}} {{svg:b1b_falla_mes}}</div>
+      <div class="k">Hallazgo</div><div class="v hallazgo">Un solo nodo concentra el 57,9 % de todas las fallas del sistema (9.672 de 16.708), y su tasa casi se cuadruplicó en tres meses. Además, 7 de los 12 riegos que se cortaron por falla de sensor ocurrieron en ese nodo.</div>
+      <div class="k">Interpretación</div><div class="v">El problema es de ese nodo, no del sistema. El aumento sostenido coincide con un deterioro del sensor o de su conexión (corrosión del FC-28 resistivo, cable flojo). Mientras el sensor falla, la Huerta Central no se riega de forma automática.</div>
+      <div class="k">Utilidad</div><div class="v">Indica dónde y cuándo hacer mantenimiento, y propone un indicador de alerta temprana (ver la decisión 1).</div>
+      <div class="k">Limitación</div><div class="v">Los datos muestran una asociación entre el nodo, el tiempo y la tasa de falla, pero no la causa. Abril solo tiene 10 días (13.584 lecturas del nodo). El escenario es simulado.</div>
+    </div></div>
+  </article>
+
+  <article class="conoc">
+    <header><span class="tag">Conocimiento 3 · bivariado</span><h3>La Virginia_06 pierde el Wi-Fi en el 11,4 % de las lecturas y produce el 70 % de los duplicados</h3></header>
+    <div class="cuerpo"><div class="campos">
+      <div class="k">Pregunta</div><div class="v">¿Algún nodo pierde la conexión más que los otros, y cómo afecta eso a los datos que llegan al servidor?</div>
+      <div class="k">Variables</div><div class="v"><code>wifi_ok</code>, <code>pendientes</code>, <code>id_dispositivo</code>, duplicados detectados por el ETL</div>
+      <div class="k">Procedimiento</div><div class="v">% sin Wi-Fi = lecturas con <code>wifi_ok</code> = 0 ÷ lecturas del dispositivo. Máximo de la cola de pendientes. Duplicados por dispositivo, contados en el origen.</div>
+      <div class="k">Resultado</div><div class="v">Virginia_06: <strong>11,36 %</strong> (16.246 de 143.036) frente a 0,24 % de los otros seis. La cola llegó a 179 lecturas pendientes, unas 3 horas sin enviar datos. Del total de 1.000 duplicados que eliminó el ETL, 700 vienen de este nodo. {{svg:b4_wifi_dispositivo}}</div>
+      <div class="k">Hallazgo</div><div class="v hallazgo">La falta de conectividad se concentra en un nodo: su tasa es 47 veces la de los demás, y además es el origen principal de las retransmisiones duplicadas.</div>
+      <div class="k">Interpretación</div><div class="v">El riego de La Virginia sigue funcionando porque las reglas corren dentro del ESP32. Lo que se pierde es la información a tiempo: el tablero ve ese lote con hasta 3 horas de retraso y el ETL tiene que limpiar duplicados.</div>
+      <div class="k">Utilidad</div><div class="v">Justifica una intervención concreta de red (ver la decisión 2) y explica de dónde vienen la mayoría de los duplicados.</div>
+      <div class="k">Limitación</div><div class="v">No se registra la intensidad de la señal (RSSI), así que no se sabe si la causa es la distancia, un obstáculo o el router. Se supone que la cola no pierde datos.</div>
+    </div></div>
+  </article>
+
+  <article class="conoc">
+    <header><span class="tag">Conocimiento 4 · bivariado</span><h3>Con las lluvias, el campo abierto riega 36 % menos y el invernadero no cambia</h3></header>
+    <div class="cuerpo"><div class="campos">
+      <div class="k">Pregunta</div><div class="v">¿Cómo cambia la demanda de agua de riego entre la temporada seca y la lluviosa? Saberlo es clave para planear el uso del agua.</div>
+      <div class="k">Variables</div><div class="v"><code>litros_est</code>, mes y temporada, ubicación (campo abierto o invernadero)</div>
+      <div class="k">Procedimiento</div><div class="v">Litros por día por nodo = Σ litros ÷ días observados del mes ÷ nodos de la ubicación. Se usa la tasa por día porque abril está incompleto.</div>
+      <div class="k">Resultado</div><div class="v">Campo abierto: 16,02, 15,51, 10,10 y 10,23 L/día por nodo (enero a abril). Por temporada pasa de <strong>15,78 a 10,13 (−35,8 %)</strong>. Invernadero: de 19,44 a 19,23 (−1,1 %). {{svg:b2_litros_mes}}</div>
+      <div class="k">Hallazgo</div><div class="v hallazgo">La caída del consumo empieza en marzo y solo ocurre en los lotes expuestos a la lluvia. El invernadero mantiene una demanda constante, que además es la más alta por nodo.</div>
+      <div class="k">Interpretación</div><div class="v">En temporada de lluvias el agua del cielo cubre parte de la demanda de campo abierto. El invernadero depende del riego todo el año y por eso es la carga fija del sistema.</div>
+      <div class="k">Utilidad</div><div class="v">Permite dimensionar el tanque o la bomba según la temporada (la temporada seca define la capacidad necesaria) y dar prioridad al invernadero cuando el agua escasea.</div>
+      <div class="k">Limitación</div><div class="v">Los litros se estiman con el caudal nominal de cada bomba (2,2–2,8 L/min) a escala de maqueta. La lluvia es simulada. Solo hay un nodo en invernadero, así que no se puede generalizar a otros invernaderos.</div>
+    </div></div>
+  </article>
+
+  <article class="conoc">
+    <header><span class="tag">Conocimiento 5 · multivariado</span><h3>La demanda se concentra en la tarde de la temporada seca, y la lluvia la reduce de forma distinta en cada cultivo</h3></header>
+    <div class="cuerpo"><div class="campos">
+      <div class="k">Pregunta</div><div class="v">¿En qué combinación de cultivo, temporada y hora del día se concentra el uso del agua?</div>
+      <div class="k">Variables</div><div class="v">cultivo, temporada, franja horaria (de la hora de inicio), <code>litros_est</code></div>
+      <div class="k">Procedimiento</div><div class="v">Agrupación conjunta por las tres variables: Σ litros de los eventos que cumplen las tres condiciones ÷ días de la temporada. Se calcula como una sola consulta o medida, no como tres resultados separados.</div>
+      <div class="k">Resultado</div><div class="v">La franja de la tarde (12–17 h) concentra el <strong>49,9 %</strong> de los litros: 51,2 % en campo abierto en temporada seca y 48,9 % en lluviosa. Las celdas más altas son Maíz Forrajero, Hortalizas y Tomate en la tarde de la temporada seca (9,3–9,4 L/día). Cambio de consumo de seca a lluviosa por cultivo: Fríjol −48,0 %, Papa Pastusa −40,7 %, Papa Sabanera −39,7 %, Hortalizas −32,9 %, Papa Criolla −32,8 %, Maíz −26,8 % y Tomate (invernadero) −1,0 %. {{svg:m1_cultivo_temporada_franja}}</div>
+      <div class="k">Hallazgo</div><div class="v hallazgo">La combinación de temporada seca, tarde y campo abierto es el punto de mayor demanda. La lluvia no reduce el riego por igual: en Fríjol (suelo arcilloso) la reducción es casi el doble que en Maíz (suelo arenoso).</div>
+      <div class="k">Interpretación</div><div class="v">El riego se activa cuando el sol y el calor secan el suelo más rápido. Los suelos que retienen agua aprovechan mejor la lluvia, y los arenosos siguen pidiendo riego aunque llueva.</div>
+      <div class="k">Utilidad</div><div class="v">Indica a qué horas el sistema debe tener agua y presión disponibles, y en qué cultivos conviene ajustar los umbrales por temporada (Maíz Forrajero).</div>
+      <div class="k">Limitación</div><div class="v">11 de las 56 celdas tienen menos de 5 eventos, sobre todo en la madrugada y la noche, y no deben interpretarse por separado. Cada cultivo tiene un solo nodo, así que el efecto del cultivo y el del tipo de suelo no se pueden separar. La relación es una asociación, no una causa.</div>
+    </div></div>
+  </article>
+</section>
+
+<!-- 11 VALIDACIÓN -->
+<section class="sec" id="validacion">
+  <p class="num">11</p>
+  <h2>Validación</h2>
+  <ul class="check">
+    <li><strong>Origen directo en los datos:</strong> cada cifra se calcula con una consulta sobre el DW (<code>06_consultas_conocimientos.sql</code>), y los mismos valores aparecen en el dashboard y en una réplica independiente en Python.</li>
+    <li><strong>Repetibilidad:</strong> la simulación tiene semilla fija, el ETL es idempotente (TRUNCATE y recarga) y el script T-SQL equivalente debe dar el mismo balance de filas que SSIS.</li>
+    <li><strong>Correspondencia con el gráfico:</strong> cada visual muestra en su título las variables y el denominador que usa, y la información sobre herramientas muestra el conteo de cada grupo.</li>
+    <li><strong>Tamaño de los grupos:</strong> 143.015–143.041 lecturas y 92–216 eventos por nodo. Hay 11 celdas del multivariado con menos de 5 eventos, señaladas como no interpretables.</li>
+    <li><strong>Valores faltantes:</strong> 300 filas sin dispositivo o sin métricas fueron a cuarentena. 800 <code>falla_sensor</code> nulos se trataron como <code>OK</code>; esa es una suposición documentada.</li>
+    <li><strong>Atípicos investigados antes de descartarse:</strong> el 0 % de humedad corresponde a fallas (99 %), así que se separan pero no se borran. Las 1.120 lecturas bajo 0 °C son madrugadas de temporada seca (heladas posibles en la Sabana) y se conservan. Los 150 valores mayores de 100 % y los 150 menores de 0 % se acotaron. Solo hay 1 alerta lógica (bomba encendida con suelo &gt; 85 %): es una lectura de 104,23 % (acotada a 100) tomada durante un riego en SanJose_02. Es un valor anómalo y no un sobre-riego real.</li>
+    <li><strong>Asociación, no causalidad:</strong> las relaciones entre nodo y falla, temporada y consumo, y cultivo y franja se presentan como asociaciones observadas en un escenario simulado.</li>
+  </ul>
+</section>
+
+<!-- 12 DECISIONES -->
+<section class="sec" id="decisiones">
+  <p class="num">12</p>
+  <h2>Decisiones sustentadas</h2>
+
+  <article class="decision">
+    <span class="chip alerta">Mantenimiento</span><span class="chip">Conocimientos 1 y 2</span>
+    <h3>D1 · Reemplazar y recalibrar el sensor de humedad de ESP32_VillaLuz_05, y crear una alerta por tasa de falla</h3>
+    <div class="campos">
+      <div class="k">Acción</div><div class="v">Inspeccionar el cableado y reemplazar el sensor FC-28 de la Huerta Central (Finca Villa Luz, Hortalizas Varias) por uno capacitivo. Recalibrar <code>raw_seco</code> y <code>raw_mojado</code>. Agregar al tablero una alerta cuando la tasa semanal de falla de un nodo supere el 2 %.</div>
+      <div class="k">Hallazgo y valores</div><div class="v">6,76 % de lecturas con falla frente a 0,82 % del resto. La tasa subió de 3,03 % a 11,87 % entre enero y abril. El nodo tiene el 57,9 % de todas las fallas y 7 de los 12 riegos cortados por falla.</div>
+      <div class="k">Dirigida a</div><div class="v">Dispositivo ESP32_VillaLuz_05 · técnico de campo</div>
+      <div class="k">Mejora esperada</div><div class="v">Bajar la tasa de falla del nodo al nivel de los demás (≤ 1 %). Con los datos de este período, eso equivale a recuperar unas 8.500 lecturas útiles (la diferencia entre 6,76 % y 0,82 % de 143.020).</div>
+      <div class="k">Indicador de seguimiento</div><div class="v"><strong>% Falla Sensor</strong> semanal de VillaLuz_05 (meta ≤ 1 %) y número de riegos finalizados por FALLA_SENSOR (meta 0 al mes).</div>
+      <div class="k">Limitaciones</div><div class="v">La causa no está confirmada (podría ser el cable o el conector y no el sensor). Los datos son simulados. El cambio a sensor capacitivo tiene un costo y exige recalibrar.</div>
+    </div>
+  </article>
+
+  <article class="decision">
+    <span class="chip alerta">Conectividad</span><span class="chip">Conocimiento 3</span>
+    <h3>D2 · Mejorar la cobertura Wi-Fi del nodo de La Virginia y registrar la señal (RSSI)</h3>
+    <div class="campos">
+      <div class="k">Acción</div><div class="v">Instalar un repetidor o una antena externa entre el router y el Lote La Virginia (Finca La Virginia, Papa Sabanera). Agregar <code>WiFi.RSSI()</code> al JSON del firmware para tener una medida de la señal.</div>
+      <div class="k">Hallazgo y valores</div><div class="v">11,36 % de lecturas sin Wi-Fi frente a 0,24 % de los demás. La cola llegó a 179 pendientes (unas 3 horas de retraso). El nodo originó 700 de los 1.000 duplicados.</div>
+      <div class="k">Dirigida a</div><div class="v">Dispositivo ESP32_Virginia_06 · infraestructura de red de la finca</div>
+      <div class="k">Mejora esperada</div><div class="v">Datos que lleguen a tiempo para ese lote, menos duplicados en el ETL y un tablero sin vacíos de varias horas.</div>
+      <div class="k">Indicador de seguimiento</div><div class="v"><strong>% Sin WiFi</strong> del nodo (meta &lt; 1 %), máximo diario de pendientes (meta &lt; 15) y duplicados eliminados por carga.</div>
+      <div class="k">Limitaciones</div><div class="v">Sin RSSI no se sabe la causa de las caídas. La mejora no cambia el riego, que es local. Hay que comprobar en campo que el repetidor tenga alimentación eléctrica estable.</div>
+    </div>
+  </article>
+
+  <article class="decision">
+    <span class="chip">Planeación hídrica</span><span class="chip">Conocimientos 4 y 5 · complementaria</span>
+    <h3>D3 · Dimensionar el agua disponible según la temporada seca y la franja de la tarde</h3>
+    <div class="campos">
+      <div class="k">Acción</div><div class="v">Garantizar el agua almacenada y la presión de 12 a 17 h en enero y febrero, y no programar mantenimiento de bombas en esa franja. Probar umbrales por temporada en Maíz Forrajero (suelo arenoso), el cultivo de campo abierto que menos reduce su consumo con la lluvia.</div>
+      <div class="k">Hallazgo y valores</div><div class="v">El 49,9 % de los litros se usa en la tarde. En campo abierto el consumo cae 35,8 % en temporada lluviosa, mientras que el invernadero se mantiene en unos 19 L/día. Maíz solo baja 26,8 %.</div>
+      <div class="k">Dirigida a</div><div class="v">Proceso de riego · productores de campo abierto e invernadero</div>
+      <div class="k">Mejora esperada</div><div class="v">Ningún riego sin agua disponible en el pico de demanda y un mejor uso del agua de lluvia.</div>
+      <div class="k">Indicador de seguimiento</div><div class="v">Litros por día por nodo por temporada y % de litros en la franja de la tarde.</div>
+      <div class="k">Limitaciones</div><div class="v">Los litros son estimados y hay un solo nodo por cultivo. Antes de extender los cambios conviene una prueba piloto que compare los lotes con y sin ajuste.</div>
+    </div>
+  </article>
+</section>
+
+<!-- 13 RESULTADOS -->
+<section class="sec" id="resultados">
+  <p class="num">13</p>
+  <h2>Productos y resultados</h2>
+  <div class="tabla-wrap"><table>
+    <thead><tr><th>Producto esperado</th><th>Producto alcanzado</th><th>Evidencia verificable</th></tr></thead>
+    <tbody>
+      <tr><td>Prototipo IoT de riego automático</td><td>Maqueta con ESP32, sensores, RTC, relé y bomba que funciona con las reglas de umbral</td><td>Fotos (sección 07), firmware y video</td></tr>
+      <tr><td>Base de datos relacional</td><td><code>RiegoInteligente</code> en 3FN, con 7 tablas e integridad referencial</td><td>Diagrama y <code>01_oltp_ddl.sql</code></td></tr>
+      <tr><td>Un millón de mediciones simuladas</td><td>1.003.400 lecturas y 992 eventos, reproducibles con semilla fija</td><td><code>generar_simulacion.py</code> y conteos</td></tr>
+      <tr><td>ETL hacia el Data Warehouse</td><td>Paquete SSIS con cuarentena y deduplicación, más un script T-SQL equivalente</td><td>Capturas del Data Flow y balance de filas</td></tr>
+      <tr><td>Dashboard de Power BI</td><td>5 páginas: 6 indicadores, 3 univariados, 4 bivariados, 1 multivariado y calidad de datos</td><td>Tablero integrado en la sección 09</td></tr>
+      <tr><td>Conocimiento y decisiones</td><td>5 conocimientos con 8 elementos cada uno y 3 decisiones con indicador de seguimiento</td><td>Secciones 10–12 y <code>06_consultas_conocimientos.sql</code></td></tr>
+      <tr><td>Sitio web publicado</td><td>Este sitio, con menú, documentación del PGC y tablero</td><td>URL pública</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 14 CONCLUSIONES -->
+<section class="sec" id="conclusiones">
+  <p class="num">14</p>
+  <h2>Conclusiones y referencias</h2>
+  <h4>Cumplimiento de los objetivos</h4>
+  <ul>
+    <li>El prototipo cumple el control automático. Separar la etapa de control de la de potencia evitó reinicios del ESP32. El pin GPIO 34 (ADC1) permitió leer el sensor analógico con el Wi-Fi activo. El RTC garantizó la hora de cada registro aunque no hubiera red.</li>
+    <li>La cadena de datos, de la simulación al OLTP, el ETL, el DW y Power BI, procesó 1.003.400 lecturas con un balance exacto y reglas de calidad documentadas.</li>
+    <li>El análisis produjo cinco conocimientos verificables. Dos son de calidad y operación (el sensor de VillaLuz_05 y el Wi-Fi de La Virginia) y tres son de gestión del agua (temporada, ubicación y franja). De ellos salieron decisiones con indicadores de seguimiento.</li>
+  </ul>
+  <h4>Limitaciones</h4>
+  <ul>
+    <li>Los datos del millón de mediciones son simulados. Los patrones encontrados describen el escenario, no fincas reales.</li>
+    <li>Hay un nodo por cultivo y por tipo de suelo, así que los efectos de cultivo, suelo y finca se confunden entre sí.</li>
+    <li>Los litros se estiman con el caudal nominal porque no hay caudalímetro, y abril solo tiene 10 días.</li>
+  </ul>
+  <h4>Oportunidades de mejora</h4>
+  <ul>
+    <li>Agregar un caudalímetro y un pluviómetro, registrar el RSSI y cambiar los sensores resistivos por capacitivos.</li>
+    <li>Hacer una carga incremental del ETL (Lookup sobre <code>id_lectura_origen</code>) y un refresco programado del tablero.</li>
+    <li>Usar la serie histórica para anticipar riegos con un modelo predictivo de secado.</li>
+  </ul>
+  <h4>Referencias</h4>
+  <ol class="refs">
+    <li>Chapman, P., Clinton, J., Kerber, R., Khabaza, T., Reinartz, T., Shearer, C. y Wirth, R. (2000). <em>CRISP-DM 1.0: Step-by-step data mining guide</em>. SPSS Inc.</li>
+    <li>FAO. AQUASTAT: Sistema mundial de información sobre el agua y la agricultura. <a href="https://www.fao.org/aquastat/">https://www.fao.org/aquastat/</a></li>
+    <li>Pereira, G. P., Chaari, M. Z. y Daroge, F. (2023). IoT-Enabled Smart Drip Irrigation System Using ESP32. <em>IoT</em>, 4(3), 12. <a href="https://www.mdpi.com/2624-831X/4/3/12">https://www.mdpi.com/2624-831X/4/3/12</a></li>
+    <li>Low-cost IoT-based smart irrigation system (2025). <em>Applied Water Science</em>. Springer. <a href="https://link.springer.com/article/10.1007/s13201-025-02727-4">https://link.springer.com/article/10.1007/s13201-025-02727-4</a></li>
+    <li>Lazaruk, I. y Klym, H. (2025). Smart soil moisture monitoring for IoT-controlled automatic plant irrigation. <em>Measuring Equipment and Metrology</em>, Lviv Polytechnic. <a href="https://science.lpnu.ua/node/40026">https://science.lpnu.ua/node/40026</a></li>
+    <li>IDEAM, citado en Contexto Ganadero (2020). Temporada seca seguirá en el país a pesar de algunas lluvias. <a href="https://www.contextoganadero.com/agricultura/temporada-seca-seguira-en-el-pais-pesar-de-algunas-lluvias-ideam">Enlace</a></li>
+    <li>Kimball, R. y Ross, M. (2013). <em>The Data Warehouse Toolkit</em> (3.ª ed.). Wiley.</li>
+    <li>Microsoft (2025). Publicar en la web desde Power BI. <a href="https://learn.microsoft.com/power-bi/collaborate-share/service-publish-to-web">Microsoft Learn</a></li>
+  </ol>
+  <footer class="pie">Universidad de Cundinamarca · Extensión Chía · Big Data · 2026</footer>
+</section>
+
+</div>
+</main>
+</div>
+<script>
+(function () {
+  var f = document.getElementById('pbi-frame');
+  if (f && f.getAttribute('src').indexOf('PEGUE_AQUI') === 0) {
+    f.remove();
+    document.getElementById('pbi-aviso').hidden = false;
+  }
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.menu a'));
+  if (!('IntersectionObserver' in window)) return;
+  var obs = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (a) { a.classList.toggle('activo', a.getAttribute('href') === '#' + e.target.id); });
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('section.sec').forEach(function (s) { obs.observe(s); });
+})();
+</script>
+</body>
+</html>
